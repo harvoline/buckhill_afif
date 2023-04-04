@@ -1,6 +1,7 @@
 version: '3'
 services:
-    laravel.test:
+    web:
+        container_name: buckhill_web
         build:
             context: ./docker/8.2
             dockerfile: Dockerfile
@@ -33,6 +34,7 @@ services:
                     cpus: "1"
                     memory: "2G"
     mysql:
+        container_name: buckhill_db
         image: 'mysql/mysql-server:8.0'
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
@@ -57,6 +59,7 @@ services:
             retries: 3
             timeout: 5s
     mailpit:
+        container_name: buckhill_mailpit
         image: 'axllent/mailpit:latest'
         ports:
             - '${FORWARD_MAILPIT_PORT:-1025}:1025'
