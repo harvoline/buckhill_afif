@@ -1,66 +1,143 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Buckhill Assessment - Afif
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Description
+---
+This a simple project that are using Jwt token for authentication and local custom package, `harvoline\order-notication`.
 
-## About Laravel
+## Requirements
+1. Docker-compose
+2. PHP 8.1
+3. Laravel 10.0
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Installation
+---
+1. Git clone the project
+```terminal
+    git clone https://github.com/harvoline/buckhill_afif.git
+```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+2. Change directory to the project
+```terminal
+    cd buckhill_afif/
+```
+3. Add/Put your `.env` files (You can refer to `.env.example`) and 
+   
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+    *** Make sure you set your setting properly as docker will build based on your `.env`
+```code
+    // Some of the important setting
+    # DB SETTINGS
+    DB_CONNECTION=mysql
+    DB_HOST=mysql
+    DB_PORT=3306
+    DB_DATABASE=buckhill_afif
+    DB_USERNAME=sail
+    DB_PASSWORD=password
 
-## Learning Laravel
+    # PORT SETTINGS
+    APP_PORT=8801 # Original port : 80
+    VITE_PORT=5873 # Original port : 5173
+    FORWARD_DB_PORT=3806 # Original port : 3306
+    FORWARD_MAILPIT_PORT=1825 # Original port : 1025
+    FORWARD_MAILPIT_DASHBOARD_PORT=8825 # Original port : 8025
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+    # TEAMS SETTINGS
+    ORDER_NOTIFICATION_TEAMS_WEBHOOK_URL=<your Teams webhook>
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+    # SWAGGER SETTING
+    L5_SWAGGER_GENERATE_ALWAYS=true
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+4. Run docker command
+```
+    docker-compose up -d
+```
 
-## Laravel Sponsors
+4. Bash into your created container and run the following command:
+```terminal
+    docker exec -it buckhill_web bash
+    chown sail:sail -R .
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+5. Run below command:
+```terminal
+    composer install
+    php artisan migrate --seed
+    php artisan l5-swagger:generate
+```
 
-### Premium Partners
+## Usage
+---
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+This project come with Swagger documentation to help and guide on how to run the project. You can access Swagger UI at :
+```terminal
+    // This will depend on the port you setup for in your .env
+    http://localhost:8801/api/documentation
+```
 
-## Contributing
+All available endpoint are can be test in the Swagger UI
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
+## Testing
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+This project come with test cases that you can run to see your application is working.
+The test can be run by using the command below:
+```terminal
+    php artisan test
+```
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+```code
+    ORDER_NOTIFICATION_TEAMS_WEBHOOK_URL=<your Teams webhook>
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. Register the service in your `app.php`:
+```code
+    /*
+    * Package Service Providers...
+    */
+    Harvoline\OrderNotification\OrderNotificationServiceProvider::class,         # <---- add this row
+```
+
+1. Add `OrderNotificationTrait` trait to your `Order` model (it can be any model)
+```code
+    // From this
+    use HasFactory; # Example. It can have many other traits
+
+
+    // To this
+    use HasFactory, OrderNotificationTrait;
+```
+
+5. By default, it will track column `status`. If you need it to track other column, add this property to your model and state column that you want to be track:
+
+```code
+    // Default
+    public $updatedColumn = 'status';
+
+    // If you want to track custom column
+    public $updatedColumn = 'order_status_id';
+```
+
+
+## Usage
+---
+You can test the event and listener by updating your tracked model status. To see that it is successful, you can see the log in your `laravel.log`
+
+```terminal
+    // Example
+    [2023-04-07 14:54:51] testing.INFO: Dispatch event
+    [2023-04-07 14:54:51] testing.INFO: Triggering send notification
+```
+
+Example on how to trigger:
+
+*** Make sure the new status is not the same as the old one
+```terminal
+    php artisan tinker
+
+    > \App\Model\Order::find(1)->update(['status' => 3]); 
+    > true
+```
