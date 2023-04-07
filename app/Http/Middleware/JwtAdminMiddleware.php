@@ -45,7 +45,7 @@ class JwtAdminMiddleware
         $jwtToken = JwtToken::where('unique_id', $token_claims['user_uuid'])->first();
 
         if (!$jwtToken) {
-            return response()->json(['error' => 'Token not found'], 404);
+            return response()->json(['error' => 'Token is not a valid token'], 404);
         }
 
         if ($parsedToken->isExpired(now())) {
