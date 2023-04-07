@@ -58,7 +58,7 @@ class User extends AuthenticatableContract
     public function generateToken()
     {
         $datetime = new \DateTimeImmutable();
-        $signingKey   = InMemory::plainText('jwt-token');
+        $signingKey   = InMemory::plainText(random_bytes(32));
 
         $token = (new Builder(new JoseEncoder(), ChainedFormatter::default()))
             ->issuedBy(env('APP_URL'))
@@ -97,5 +97,10 @@ class User extends AuthenticatableContract
         }
 
         return true;
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }
