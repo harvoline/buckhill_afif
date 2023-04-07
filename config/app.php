@@ -185,6 +185,8 @@ return [
         /*
          * Package Service Providers...
          */
+        Harvoline\OrderNotification\OrderNotificationServiceProvider::class,
+        L5Swagger\L5SwaggerServiceProvider::class,
 
         /*
          * Application Service Providers...

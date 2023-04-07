@@ -1,0 +1,26 @@
+{
+    "name": "harvoline/order-notification",
+    "description": "Laravel Microsoft Teams notification for order status update",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Harvoline\\OrderNotification\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Harvoline\\OrderNotification\\OrderNotificationServiceProvider"
+            ]
+        }
+    },
+    "authors": [
+        {
+            "name": "Muhammad Norafif",
+            "email": "mohd.norafif@gmail.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.5"
+    }
+}

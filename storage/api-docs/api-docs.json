@@ -1,0 +1,871 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Buckhill Afif - Order Notification API",
+        "version": "0.1"
+    },
+    "paths": {
+        "/api/v1/admin/login": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Log in as an admin user",
+                "description": "Logs in as an admin user with the given email address and password.",
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "string": {
+                                        "summary": "Invalid credentials",
+                                        "value": {
+                                            "error": "Invalid credentials"
+                                        }
+                                    },
+                                    "string2": {
+                                        "summary": "You are not authorized to access this resource.",
+                                        "value": {
+                                            "error": "You are not authorized to access this resource."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/admin/logout": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Log out as an admin user",
+                "description": "Logs out the current admin user and revokes their API token.",
+                "operationId": "logout",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "JWT Auth Token. Use admin login to get the token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful logout",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successfully logged out"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Token is not a valid token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Token is not a valid token"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/admin/users": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Get list of users",
+                "description": "Get list of users. If ID provided, get list of users with the request ID. Make sure you authorize (using the top button) first before making request",
+                "operationId": "listUsers",
+                "responses": {
+                    "200": {
+                        "description": "Successful logout",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "string": {
+                                        "summary": "List of users",
+                                        "value": [
+                                            {
+                                                "email": "admin@buckhill.co.uk"
+                                            },
+                                            {
+                                                "email": "user1@buckhill.co.uk"
+                                            },
+                                            {
+                                                "email": "user10@buckhill.co.uk"
+                                            },
+                                            {
+                                                "email": "user2@buckhill.co.uk"
+                                            },
+                                            {
+                                                "email": "user3@buckhill.co.uk"
+                                            },
+                                            {
+                                                "email": "user4@buckhill.co.uk"
+                                            },
+                                            {
+                                                "email": "user5@buckhill.co.uk"
+                                            },
+                                            {
+                                                "email": "user6@buckhill.co.uk"
+                                            },
+                                            {
+                                                "email": "user7@buckhill.co.uk"
+                                            },
+                                            {
+                                                "email": "user8@buckhill.co.uk"
+                                            },
+                                            {
+                                                "email": "user9@buckhill.co.uk"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Invalid token"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error while decoding from Base64Url, invalid base64 characters detected"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "hgvhgv.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdCIsImp0aSI6IjY0MmZiMDQwMjU2ZjciLCJpYXQiOjE2ODA4NDY5MTIuMTUzMjE5LCJleHAiOjE2ODA5MzMzMTIuMTUzMjE5LCJ1c2VyX2lkIjoxLCJ1c2VyX3V1aWQiOiJiMDJlNGFiZC1jNzliLTRkMWItYTI4Yi0zZWQ5N2QxMzlmNTUifQ.Yq1KDEr5R-WTYJ7803_Q1EmOxQg-C3ZRM_Nx9u7o-ec"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/orders": {
+            "get": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Get list of orders",
+                "description": "Get list of orders. Make sure you authorize (using the top button) first before making request",
+                "operationId": "listUserOrders",
+                "responses": {
+                    "200": {
+                        "description": "Successful logout",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "string": {
+                                        "summary": "List of users",
+                                        "value": [
+                                            {
+                                                "id": 24,
+                                                "uuid": "ca74882b-055d-3949-965f-d03f6ef1c3c6",
+                                                "user_id": 2,
+                                                "order_status_id": 3,
+                                                "payment_id": "3",
+                                                "products": "{}",
+                                                "address": "{}",
+                                                "delivery_fee": null,
+                                                "amount": 19059.14,
+                                                "created_at": "2023-04-07T05:37:51.000000Z",
+                                                "updated_at": "2023-04-07T05:37:51.000000Z",
+                                                "shipped_at": null
+                                            },
+                                            {
+                                                "id": 41,
+                                                "uuid": "60875ef5-b1bb-33f6-8fb9-31fde086f46e",
+                                                "user_id": 2,
+                                                "order_status_id": 3,
+                                                "payment_id": "8",
+                                                "products": "{}",
+                                                "address": "{}",
+                                                "delivery_fee": null,
+                                                "amount": 15811.2,
+                                                "created_at": "2023-04-07T05:37:51.000000Z",
+                                                "updated_at": "2023-04-07T05:37:51.000000Z",
+                                                "shipped_at": null
+                                            },
+                                            {
+                                                "id": 62,
+                                                "uuid": "e07515cd-addb-3eca-84dc-efdb88600674",
+                                                "user_id": 2,
+                                                "order_status_id": 4,
+                                                "payment_id": "2",
+                                                "products": "{}",
+                                                "address": "{}",
+                                                "delivery_fee": null,
+                                                "amount": 6.96,
+                                                "created_at": "2023-04-07T05:37:51.000000Z",
+                                                "updated_at": "2023-04-07T05:37:51.000000Z",
+                                                "shipped_at": null
+                                            },
+                                            {
+                                                "id": 72,
+                                                "uuid": "e3705a62-757a-3f73-ac67-324c80a3cbc9",
+                                                "user_id": 2,
+                                                "order_status_id": 1,
+                                                "payment_id": "4",
+                                                "products": "{}",
+                                                "address": "{}",
+                                                "delivery_fee": null,
+                                                "amount": 235.11,
+                                                "created_at": "2023-04-07T05:37:51.000000Z",
+                                                "updated_at": "2023-04-07T05:37:51.000000Z",
+                                                "shipped_at": null
+                                            },
+                                            {
+                                                "id": 84,
+                                                "uuid": "3ac936e0-e0bb-32d7-a2bb-02e3c007f607",
+                                                "user_id": 2,
+                                                "order_status_id": 4,
+                                                "payment_id": "3",
+                                                "products": "{}",
+                                                "address": "{}",
+                                                "delivery_fee": null,
+                                                "amount": 12,
+                                                "created_at": "2023-04-07T05:37:51.000000Z",
+                                                "updated_at": "2023-04-07T05:37:51.000000Z",
+                                                "shipped_at": null
+                                            },
+                                            {
+                                                "id": 90,
+                                                "uuid": "4d408068-2647-3863-afea-87b132d570b7",
+                                                "user_id": 2,
+                                                "order_status_id": 5,
+                                                "payment_id": "7",
+                                                "products": "{}",
+                                                "address": "{}",
+                                                "delivery_fee": null,
+                                                "amount": 8822.92,
+                                                "created_at": "2023-04-07T05:37:51.000000Z",
+                                                "updated_at": "2023-04-07T05:37:51.000000Z",
+                                                "shipped_at": null
+                                            },
+                                            {
+                                                "id": 97,
+                                                "uuid": "0dd72647-a3ee-3222-9038-9d26366d40d6",
+                                                "user_id": 2,
+                                                "order_status_id": 3,
+                                                "payment_id": "3",
+                                                "products": "{}",
+                                                "address": "{}",
+                                                "delivery_fee": null,
+                                                "amount": 287316.92,
+                                                "created_at": "2023-04-07T05:37:51.000000Z",
+                                                "updated_at": "2023-04-07T05:37:51.000000Z",
+                                                "shipped_at": null
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Invalid token"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error while decoding from Base64Url, invalid base64 characters detected"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "hgvhgv.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdCIsImp0aSI6IjY0MmZiMDQwMjU2ZjciLCJpYXQiOjE2ODA4NDY5MTIuMTUzMjE5LCJleHAiOjE2ODA5MzMzMTIuMTUzMjE5LCJ1c2VyX2lkIjoxLCJ1c2VyX3V1aWQiOiJiMDJlNGFiZC1jNzliLTRkMWItYTI4Yi0zZWQ5N2QxMzlmNTUifQ.Yq1KDEr5R-WTYJ7803_Q1EmOxQg-C3ZRM_Nx9u7o-ec"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "User not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/order/create": {
+            "post": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Create new order",
+                "description": "Create new order based on the data. Make sure you authorize (using the top button) first before making request",
+                "operationId": "createUserOrders",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "order_status_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "products": {
+                                        "type": "string",
+                                        "example": []
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": []
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "example": 10.12
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful logout",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "string": {
+                                        "summary": "New order",
+                                        "value": [
+                                            {
+                                                "id": 24,
+                                                "uuid": "ca74882b-055d-3949-965f-d03f6ef1c3c6",
+                                                "user_id": 2,
+                                                "order_status_id": 3,
+                                                "payment_id": "3",
+                                                "products": "{}",
+                                                "address": "{}",
+                                                "delivery_fee": null,
+                                                "amount": 19059.14,
+                                                "created_at": "2023-04-07T05:37:51.000000Z",
+                                                "updated_at": "2023-04-07T05:37:51.000000Z",
+                                                "shipped_at": null
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Invalid token"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error while decoding from Base64Url, invalid base64 characters detected"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "hgvhgv.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdCIsImp0aSI6IjY0MmZiMDQwMjU2ZjciLCJpYXQiOjE2ODA4NDY5MTIuMTUzMjE5LCJleHAiOjE2ODA5MzMzMTIuMTUzMjE5LCJ1c2VyX2lkIjoxLCJ1c2VyX3V1aWQiOiJiMDJlNGFiZC1jNzliLTRkMWItYTI4Yi0zZWQ5N2QxMzlmNTUifQ.Yq1KDEr5R-WTYJ7803_Q1EmOxQg-C3ZRM_Nx9u7o-ec"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "User not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Bad Request"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/order/{uuid}": {
+            "get": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Get order by uuid",
+                "description": "Get order by uuid. Make sure you authorize (using the top button) first before making request",
+                "operationId": "getUserOrder",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "Order UUID",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful logout",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "string": {
+                                        "summary": "Show order",
+                                        "value": [
+                                            {
+                                                "id": 24,
+                                                "uuid": "ca74882b-055d-3949-965f-d03f6ef1c3c6",
+                                                "user_id": 2,
+                                                "order_status_id": 3,
+                                                "payment_id": "3",
+                                                "products": "{}",
+                                                "address": "{}",
+                                                "delivery_fee": null,
+                                                "amount": 19059.14,
+                                                "created_at": "2023-04-07T05:37:51.000000Z",
+                                                "updated_at": "2023-04-07T05:37:51.000000Z",
+                                                "shipped_at": null
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Invalid token"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error while decoding from Base64Url, invalid base64 characters detected"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "hgvhgv.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdCIsImp0aSI6IjY0MmZiMDQwMjU2ZjciLCJpYXQiOjE2ODA4NDY5MTIuMTUzMjE5LCJleHAiOjE2ODA5MzMzMTIuMTUzMjE5LCJ1c2VyX2lkIjoxLCJ1c2VyX3V1aWQiOiJiMDJlNGFiZC1jNzliLTRkMWItYTI4Yi0zZWQ5N2QxMzlmNTUifQ.Yq1KDEr5R-WTYJ7803_Q1EmOxQg-C3ZRM_Nx9u7o-ec"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Order not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Update order by uuid",
+                "description": "Update order by uuid. Make sure you authorize (using the top button) first before making request",
+                "operationId": "updateUserOrder",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "Order UUID",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "order_status_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful logout",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "string": {
+                                        "summary": "Updated order",
+                                        "value": [
+                                            {
+                                                "id": 24,
+                                                "uuid": "ca74882b-055d-3949-965f-d03f6ef1c3c6",
+                                                "user_id": 2,
+                                                "order_status_id": 3,
+                                                "payment_id": "3",
+                                                "products": "{}",
+                                                "address": "{}",
+                                                "delivery_fee": null,
+                                                "amount": 19059.14,
+                                                "created_at": "2023-04-07T05:37:51.000000Z",
+                                                "updated_at": "2023-04-07T05:37:51.000000Z",
+                                                "shipped_at": null
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Invalid token"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error while decoding from Base64Url, invalid base64 characters detected"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "hgvhgv.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdCIsImp0aSI6IjY0MmZiMDQwMjU2ZjciLCJpYXQiOjE2ODA4NDY5MTIuMTUzMjE5LCJleHAiOjE2ODA5MzMzMTIuMTUzMjE5LCJ1c2VyX2lkIjoxLCJ1c2VyX3V1aWQiOiJiMDJlNGFiZC1jNzliLTRkMWItYTI4Yi0zZWQ5N2QxMzlmNTUifQ.Yq1KDEr5R-WTYJ7803_Q1EmOxQg-C3ZRM_Nx9u7o-ec"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Order not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Order not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user/login": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Log in as a user",
+                "description": "Logs in as a user with the given email address and password.",
+                "operationId": "userLogin",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user1@buckhill.co.uk"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "userpassword"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "string": {
+                                        "summary": "Invalid credentials",
+                                        "value": {
+                                            "error": "Invalid credentials"
+                                        }
+                                    },
+                                    "string2": {
+                                        "summary": "You are not authorized to access this resource.",
+                                        "value": {
+                                            "error": "You are not authorized to access this resource."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/logout": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Log out as a user",
+                "description": "Logs out the current user and revokes their API token.",
+                "operationId": "userLogout",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "JWT Auth Token. Use admin login to get the token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful logout",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successfully logged out"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Token is not a valid token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Token is not a valid token"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "api_key_security": {
+                "type": "apiKey",
+                "description": "A short description for security scheme",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "security": [
+        {
+            "api_key_security": []
+        }
+    ]
+}
